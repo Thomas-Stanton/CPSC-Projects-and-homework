@@ -1,0 +1,104 @@
+//THOMAS STANTON
+#include <iostream>
+#include <vector>
+#include <climits>
+#include <array>
+
+// for INT_MAX
+using namespace std;
+
+
+class findingCity
+{
+
+	vector<int> cityFuel;
+	vector<int> cityDistances;
+	int cmpg;
+
+
+public:
+	int findStartingCity();
+	void arrayInput(vector<int>& distance, vector<int>& fuel, int mpg);
+
+	findingCity()//manual constructor needed for vector instantiation (how many cities there are), could be coded with pointers to account for adjusted size of circle
+	{
+		cmpg = 0;
+		cityFuel = { 0,0,0,0,0 };
+		cityDistances = { 0,0,0,0,0 };
+	}
+	
+};
+void findingCity::arrayInput(vector<int>& distance, vector<int>& fuel, int mpg)// inputs the cities chosen in code to the class
+{
+	int n = distance.size(); //1
+	cmpg = mpg; //1
+	for (int i = 0; i < n; i++)//n //for every n of the inputted vector. mirror input into class variable
+	{
+		cityDistances[i] = distance[i];//1
+		cityFuel[i] = fuel[i];//1
+	}
+	return;//1
+}
+int findingCity::findStartingCity()
+{
+
+	int n = cityDistances.size(); // number of cities 1
+
+	for (int beginning = 0; beginning < n; beginning++) //n
+	{
+		int tank = 0; // gas in tank 1 
+		int valid = 1; // flag indicating if current starting city is valid 1
+
+		for (int i = 0; i < n; i++)// n
+		{
+			int j = (beginning + i) % n; //1
+			// index of the current city
+			int gas = cityFuel[j];//1
+			// gas at current city
+			int distance = cityDistances[j]; //1
+			// distance to next city
+			tank += gas * cmpg - distance;//1
+ // update gas  after arriving in next city
+
+			if (tank < 0) //1
+			{
+				valid = 0;//1
+ // flares if the starting city is not valid
+				break;
+			}
+		}
+
+		if (valid)//1
+		{
+			return beginning;//1 //congrats, found the answer
+		}
+	}
+
+	return -1;//no valid return state 1
+}
+
+int main() //MAIN WITHOUT FUNCTION CALLS IS 7
+{
+	vector<int> cityDistances = { 5, 25, 15, 10, 15 }; //1
+	vector<int> fuel = { 1, 2, 1, 0, 3 }; //1
+	int mpg = 10; //1
+
+	findingCity findCity; //1
+
+	findCity.arrayInput(cityDistances, fuel, mpg); //2n+3
+	int startingCity = findCity.findStartingCity(); //2n+6n^2+2
+
+	if (startingCity >= 0) //1
+	{
+		cout << "The preferred starting city is: " << startingCity << endl; //1
+	}
+	else
+	{
+		cout << "Could not find a valid starting city." << endl; //1
+	}
+
+	return 0;//1
+}
+
+
+//EFFECIENCY OF CODE VIA STEP COUNTS is 4n+6n^2+12 
